@@ -7,69 +7,6 @@ openai.api_key = os.getenv("OPENAI_API_KEY")
 
 @app.route("/", methods=("GET", "POST"))
 def index():
-    print("iii")
-    if request.method == "POST":
-        animal = request.form["animal"]
-        response = openai.Completion.create(
-            model="text-davinci-003",
-            prompt=generate_prompt(animal),
-            temperature=0.6,
-            max_tokens=200,
-        )
-        print(response.choices)
-        # result_names = response.choices[0].text.strip()  # Get the generated text from the API response
-        #     # result_food = response.choices[1].text.strip()  # Get the generated text from the API response
-        # names = parse_result(result_names)
-        # # foods = parse_result(result_food)
-        # print(result)
-        # print(names)
-        # print(foods)
-        return render_template("index.html", names=None, foods=None)
-
-
-
-def generate_name_prompt(animal):
-    return f"""Suggest three names for an animal.
-
-Animal: Cat
-Names: Captain Sharpclaw, Agent Fluffball, The Incredible Feline
-
-Animal: Dog
-Names: Ruff the Protector, Wonder Canine, Sir Barks-a-Lot
-
-Animal: {animal.capitalize()}
-Names:"""
-
-def generate_food_prompt(animal):
-    return f"""Suggest three foods that the animal likes.
-
-Animal: Cat
-Foods: Fish, Chicken, Milk
-
-Animal: Dog
-Foods: Beef, Bacon, Peanut Butter
-
-Animal: {animal.capitalize()}
-Foods:"""
-
-def generate_prompt(animal):
-    name_prompt = generate_name_prompt(animal)
-    food_prompt = generate_food_prompt(animal)
-    return f"{name_prompt}\n{food_prompt}"
-
-
-
- 
-
-import os
-import openai
-from flask import Flask, redirect, render_template, request, url_for
-
-app = Flask(__name__)
-openai.api_key = os.getenv("OPENAI_API_KEY")
-
-@app.route("/", methods=("GET", "POST"))
-def index():
     if request.method == "POST":
         animal = request.form["animal"]
         response = openai.Completion.create(
@@ -92,19 +29,32 @@ def index():
 
 #BREED INFORMATION
         result = response.choices[0].text
-        names = result
         response = openai.Completion.create(
         model="text-davinci-003",
-        prompt=generate_food_prompt(animal),
+        prompt=generate_breed_prompt(animal),
         temperature=0.6,
         max_tokens=200,
         )
         result = response.choices[0].text
         breeds = result
+#growing tips
 
-        # return render_template("index.html", names=names, foods=None)
+        result = response.choices[0].text
+        response = openai.Completion.create(
+        model="text-davinci-003",
+        prompt=generate_growing_pet_tips_prompt(animal),
+        temperature=0.6,
+        max_tokens=200,
+        )
+        result = response.choices[0].text
+        tips = result
+        print(tips)
 
-    return render_template("index.html", names=names, foods=foods , breeds=breeds)
+
+
+        return render_template("index.html",names=names, foods=foods , breeds=breeds,animal=animal,tips=tips)
+
+    return render_template("index.html", names=None, foods=None , breeds=None ,tips=None  )
 
 
 
@@ -144,13 +94,19 @@ Breeds: Labrador Retriever, German Shepherd, Golden Retriever, Bulldog, Poodle
 Animal: {animal.capitalize()}
 Breeds:"""
 
+def generate_growing_pet_tips_prompt(animal):
+    return f"""Tips for Growing a {animal.capitalize()}:
 
-def generate_prompt(animal):
-    name_prompt = generate_name_prompt(animal)
-    # food_prompt = generate_food_prompt(animal)
-    food_prompt = None  
+1. Tip 1:
+   - Description of tip 1.
 
-    return f"{name_prompt}\n{food_prompt}"
+2. Tip 2:
+   - Description of tip 2.
+
+Remember to adapt these tips to suit the specific needs of your {animal} and consult with experts for personalized advice.
+"""
+
+
 
 
 
