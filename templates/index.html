@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <head>
-  <title>OpenAI Quickstart</title>
+  <title>Know About your pet</title>
   <link
     rel="shortcut icon"
     href="{{ url_for('static', filename='dog.png') }}"
@@ -21,15 +21,15 @@
 
 <body>
   <img src="{{ url_for('static', filename='dog.png') }}" class="icon" />
-  <h3>Name my pet</h3>
+  <h3>Know your pet</h3>
   <form action="/" method="post">
-    <input type="text" name="animal" placeholder="Enter an animal" required />
-    <input type="submit" value="Generate names" />
+    <input type="text" name="animal" placeholder="Enter an animal you want to pet" required />
+    <input type="submit" value="know more about your pet" />
   </form>
   <div class="container">
     {% if names %}
     <div class="result">
-      <h4>Suggested Names:</h4>
+      <h4>Suggested Names for your {{ animal }}  :</h4>
       <ul>
         {% for name in names.split(',') %}
         <li>{{ name }}</li>
@@ -48,14 +48,25 @@
     </div>
 
     <div class="result">
-      <h4>Some Popular Breeds {{ animal }}:</h4>
+      <h4>Some Popular Breeds of {{ animal }}:</h4>
       <ul>
         {% for breed in breeds.split(',') %}
         <li>{{ breed }}</li>
         {% endfor %}
       </ul>
     </div>
-
     {% endif %}
   </div>
+  {% if tips %}
+  <div class="container">
+    <div class="result">
+      <h4>Tips for Growing a {{ animal }}:</h4>
+      <ul>
+        {% for tip in tips.split('  ') %}
+        <li>{{ tip }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  {% endif %}
 </body>
