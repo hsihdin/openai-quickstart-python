@@ -6,6 +6,17 @@
     href="{{ url_for('static', filename='dog.png') }}"
   />
   <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}" />
+  <style>
+    .container {
+      display: flex;
+    }
+
+    .result {
+      border: 1px solid black;
+      padding: 10px;
+      margin-right: 10px;
+    }
+  </style>
 </head>
 
 <body>
@@ -15,7 +26,36 @@
     <input type="text" name="animal" placeholder="Enter an animal" required />
     <input type="submit" value="Generate names" />
   </form>
-  {% if result %}
-  <div class="result">{{ result }}</div>
-  {% endif %}
+  <div class="container">
+    {% if names %}
+    <div class="result">
+      <h4>Suggested Names:</h4>
+      <ul>
+        {% for name in names.split(',') %}
+        <li>{{ name }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+    {% if foods %}
+    <div class="result">
+      <h4>Foods {{ animal }} Likes:</h4>
+      <ul>
+        {% for food in foods.split(',') %}
+        <li>{{ food }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <div class="result">
+      <h4>Some Popular Breeds {{ animal }}:</h4>
+      <ul>
+        {% for breed in breeds.split(',') %}
+        <li>{{ breed }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    {% endif %}
+  </div>
 </body>
